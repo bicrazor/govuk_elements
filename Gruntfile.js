@@ -147,15 +147,6 @@ module.exports = function (grunt) {
   ])
 
   grunt.registerTask(
-    'test_default',
-    'Test that the default task runs the app',
-    [
-      'copy',
-      'sass'
-    ]
-  )
-
-  grunt.registerTask(
     'encode_snippets',
     'Encode HTML snippets',
     function () {
@@ -163,35 +154,45 @@ module.exports = function (grunt) {
     }
   )
 
+  // Test
   grunt.registerTask(
-    'lint',
-    'Use govuk-scss-lint to lint the sass files',
+    'test',
     function () {
-      grunt.task.run('shell', 'lint_message')
+      grunt.task.run('lint', 'test_default', 'test_default_success')
     }
   )
 
+  // 1. Use govuk-scss-lint to lint the sass files
   grunt.registerTask(
-    'lint_message',
-    'Output a message once linting is complete',
+    'lint',
+    function () {
+      grunt.task.run('shell', 'lint_success')
+    }
+  )
+
+  // 2. Output a message once the scss-lint task has succeeded
+  grunt.registerTask(
+    'lint_success',
     function () {
       grunt.log.write('scss lint is complete, without errors.')
     }
   )
 
+  // 3. Test that the default grunt task runs the app
   grunt.registerTask(
-    'test',
-    'Lint the Sass files, then check the app runs',
-    function () {
-      grunt.task.run('lint', 'test_default', 'test_message')
-    }
+    'test_default',
+    [
+      'copy',
+      'sass',
+      'encode_snippets'
+    ]
   )
 
+  // 4. Output a message once the tests are complete
   grunt.registerTask(
-    'test_message',
-    'Output a message once the tests are complete',
+    'test_default_success',
     function () {
-      grunt.log.write('scss lint is complete and the app runs, without errors.')
+      grunt.log.write('The tests are complete and the app runs, without errors.')
     }
   )
 }
